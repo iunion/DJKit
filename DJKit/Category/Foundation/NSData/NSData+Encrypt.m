@@ -7,7 +7,6 @@
 //
 
 #import "NSData+Encrypt.h"
-#import <CommonCrypto/CommonCrypto.h>
 #import <zlib.h>
 
 NSString * const kEncryptErrorDomain = @"kEncryptErrorDomain";

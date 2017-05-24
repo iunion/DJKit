@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 DennisDeng. All rights reserved.
 //
 
-#import <CommonCrypto/CommonDigest.h>
+#import <Foundation/Foundation.h>
 
 @interface NSString (Category)
 

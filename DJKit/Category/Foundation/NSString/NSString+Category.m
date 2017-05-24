@@ -6,7 +6,6 @@
 //  Copyright (c) 2012年 DennisDeng. All rights reserved.
 //
 
-#import <CommonCrypto/CommonCryptor.h>
 #import "NSString+Category.h"
 #import "NSDate+Category.h"
 #import "NSDecimalNumber+Category.h"
