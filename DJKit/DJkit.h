@@ -10,7 +10,7 @@
 #define DJkit_h
 
 // 编码解码
-#define DJkit_Category_Encrypt  1
+#define DJkit_Category_Encrypt  0
 // Runtime
 #define DJkit_NSObject_Runtime  1
 
