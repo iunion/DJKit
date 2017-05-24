@@ -6,17 +6,10 @@
 //  Copyright © 2017年 DennisDeng. All rights reserved.
 //
 
-#import <CommonCrypto/CommonCrypto.h>
 #import "NSData+Encrypt.h"
 #import <zlib.h>
 
 NSString * const kEncryptErrorDomain = @"kEncryptErrorDomain";
-
-@interface NSError (Encrypt)
-
-+ (NSError *)errorWithCCCryptorStatus:(CCCryptorStatus)status;
-
-@end
 
 @implementation NSError (Encrypt)
 

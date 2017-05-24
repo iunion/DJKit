@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CommonCrypto/CommonCrypto.h>
 
 extern NSString * _Nonnull const kDJEncryptErrorDomain;
 
@@ -18,6 +19,12 @@ typedef NS_ENUM(NSUInteger, NSDataLogType)
 };
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface NSError (Encrypt)
+
++ (NSError *)errorWithCCCryptorStatus:(CCCryptorStatus)status;
+
+@end
 
 @interface NSData (Encrypt)
 
