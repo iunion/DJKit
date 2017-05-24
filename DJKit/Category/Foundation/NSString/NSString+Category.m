@@ -263,13 +263,13 @@
 
 + (NSUInteger)integerFromStr:(NSString *)string withBase:(NSInteger)base
 {
-    return strtoull([string UTF8String], NULL, (int)base);
+    return (NSUInteger)strtoull([string UTF8String], NULL, (int)base);
 }
 
 // 转换16进制字符串为10进制数字
 + (NSUInteger)integerFromHexStr:(NSString *)hexString
 {
-    return strtoull([hexString UTF8String], 0, 16);
+    return (NSUInteger)strtoull([hexString UTF8String], 0, 16);
 }
 
 - (NSUInteger)hexStrToInteger

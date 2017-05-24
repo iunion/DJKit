@@ -6,6 +6,8 @@
 //  Copyright © 2017年 DennisDeng. All rights reserved.
 //
 
+#if DJkit_Category_Encrypt
+
 #import "NSData+Encrypt.h"
 #import <zlib.h>
 
@@ -1371,3 +1373,6 @@ NSString * const kEncryptErrorDomain = @"kEncryptErrorDomain";
 }
 
 @end
+
+#endif
+
