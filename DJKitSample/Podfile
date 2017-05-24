@@ -1,0 +1,5 @@
+project 'DJKitSample.xcodeproj'
+platform :ios, '7.0'
+target "DJKitSample" do
+    pod 'DJKit', :path => '../'
+end
