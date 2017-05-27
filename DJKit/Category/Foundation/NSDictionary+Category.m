@@ -141,22 +141,22 @@
 
 - (float)floatForKey:(id)key withDefault:(float)theDefault
 {
-    return [self floatForKey:key withDefault:theDefault roundingMode:NSRoundPlain decimalPlaces:-1];
+    return [self floatForKey:key withDefault:theDefault roundingScale:-1 roundingMode:NSRoundPlain];
 }
 
 - (float)floatForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(float)theDefault
 {
-    return [self floatForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingMode:NSRoundPlain decimalPlaces:-1];
+    return [self floatForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingScale:-1 roundingMode:NSRoundPlain];
 }
 
-- (float)floatForKey:(id)key withDefault:(float)theDefault roundingMode:(NSRoundingMode)mode decimalPlaces:(NSInteger)places
+- (float)floatForKey:(id)key withDefault:(float)theDefault roundingScale:(short)scale roundingMode:(NSRoundingMode)mode
 {
-    return [self floatForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:theDefault roundingMode:mode decimalPlaces:-1];
+    return [self floatForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:theDefault roundingScale:-1 roundingMode:mode];
 }
 
-- (float)floatForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(float)theDefault roundingMode:(NSRoundingMode)mode decimalPlaces:(NSInteger)places
+- (float)floatForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(float)theDefault roundingScale:(short)scale roundingMode:(NSRoundingMode)mode
 {
-    NSDecimalNumber *value = [self numberForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingMode:mode decimalPlaces:places];
+    NSDecimalNumber *value = [self numberForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingScale:scale roundingMode:mode];
     
     return [value floatValue];
 }
@@ -173,7 +173,7 @@
 
 - (double)doubleForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault
 {
-    return [self doubleForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingMode:NSRoundPlain decimalPlaces:-1];
+    return [self doubleForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingScale:-1 roundingMode:NSRoundPlain];
 }
 
 - (double)MqDoubleForKey:(id)key
@@ -188,17 +188,17 @@
 
 - (double)MqDoubleForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault
 {
-    return [self doubleForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingMode:NSRoundPlain decimalPlaces:2];
+    return [self doubleForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingScale:2 roundingMode:NSRoundPlain];
 }
 
-- (double)doubleForKey:(id)key withDefault:(double)theDefault roundingMode:(NSRoundingMode)mode decimalPlaces:(NSInteger)places
+- (double)doubleForKey:(id)key withDefault:(double)theDefault roundingScale:(short)scale roundingMode:(NSRoundingMode)mode
 {
-    return [self doubleForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:theDefault roundingMode:mode decimalPlaces:places];
+    return [self doubleForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:theDefault roundingScale:scale roundingMode:mode];
 }
 
-- (double)doubleForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault roundingMode:(NSRoundingMode)mode decimalPlaces:(NSInteger)places
+- (double)doubleForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault roundingScale:(short)scale roundingMode:(NSRoundingMode)mode
 {
-    NSDecimalNumber *value = [self numberForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingMode:mode decimalPlaces:places];
+    NSDecimalNumber *value = [self numberForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingScale:scale roundingMode:mode];
     
     return [value doubleValue];
 }
@@ -215,23 +215,23 @@
 
 - (NSDecimalNumber *)numberForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault
 {
-    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:0.0f roundingMode:NSRoundPlain decimalPlaces:-1];
+    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:0.0f roundingScale:-1 roundingMode:NSRoundPlain];
 }
 
-- (NSDecimalNumber *)numberForKey:(id)key withDefault:(double)theDefault roundingMode:(NSRoundingMode)mode decimalPlaces:(NSInteger)places
+- (NSDecimalNumber *)numberForKey:(id)key withDefault:(double)theDefault roundingScale:(short)scale roundingMode:(NSRoundingMode)mode
 {
-    return [self numberForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:theDefault roundingMode:mode decimalPlaces:places];
+    return [self numberForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:theDefault  roundingScale:scale roundingMode:mode];
 }
 
-- (NSDecimalNumber *)numberForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault roundingMode:(NSRoundingMode)mode decimalPlaces:(NSInteger)places
+- (NSDecimalNumber *)numberForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault roundingScale:(short)scale roundingMode:(NSRoundingMode)mode
 {
-    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:@(theDefault) roundingMode:mode decimalPlaces:places isDouble:YES];
+    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:@(theDefault) roundingScale:scale roundingMode:mode isDouble:YES];
 }
 
 
 - (NSDecimalNumber *)MqNumberForKey:(id)key
 {
-    return [self numberForKey:key withDefault:0.0f roundingMode:NSRoundPlain decimalPlaces:2];
+    return [self numberForKey:key withDefault:0.0f roundingScale:2 roundingMode:NSRoundPlain];
 }
 
 - (NSDecimalNumber *)MqNumberForKey:(id)key withDefault:(double)theDefault
@@ -241,7 +241,7 @@
 
 - (NSDecimalNumber *)MqNumberForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault
 {
-    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:0.0f roundingMode:NSRoundPlain decimalPlaces:2];
+    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:0.0f roundingScale:2 roundingMode:NSRoundPlain];
 }
 
 - (NSDecimalNumber *)MqNumberForKey:(id)key withDefaultDecimalNumber:(NSDecimalNumber *)theDefault
@@ -251,15 +251,15 @@
 
 - (NSDecimalNumber *)MqNumberForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefaultDecimalNumber:(NSDecimalNumber *)theDefault
 {
-    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingMode:NSRoundPlain decimalPlaces:2 isDouble:NO];
+    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingScale:2 roundingMode:NSRoundPlain isDouble:NO];
 }
 
-- (NSDecimalNumber *)numberForKey:(id)key withDefault:(id)theDefault roundingMode:(NSRoundingMode)mode decimalPlaces:(NSInteger)places isDouble:(BOOL)isDouble
+- (NSDecimalNumber *)numberForKey:(id)key withDefault:(id)theDefault roundingScale:(short)scale roundingMode:(NSRoundingMode)mode isDouble:(BOOL)isDouble
 {
-    return [self numberForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:theDefault roundingMode:mode decimalPlaces:places isDouble:isDouble];
+    return [self numberForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:theDefault roundingScale:scale roundingMode:mode isDouble:isDouble];
 }
 
-- (NSDecimalNumber *)numberForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(id)theDefault roundingMode:(NSRoundingMode)mode decimalPlaces:(NSInteger)places isDouble:(BOOL)isDouble
+- (NSDecimalNumber *)numberForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(id)theDefault roundingScale:(short)scale roundingMode:(NSRoundingMode)mode isDouble:(BOOL)isDouble
 {
     NSDecimalNumber *value = isDouble ? [[NSDecimalNumber alloc] initWithDouble:[theDefault doubleValue]] : theDefault;
     
@@ -292,12 +292,12 @@
         }
     }
     
-    if (places < 0)
+    if (scale < 0)
     {
         return value;
     }
     
-    NSDecimalNumber *rounded = [NSDecimalNumber roundingNumber:value withRoundingMode:mode decimalPlaces:places];
+    NSDecimalNumber *rounded = [NSDecimalNumber roundingNumber:value withScale:scale mode:mode];
     
     return rounded;
 };
@@ -351,7 +351,7 @@
 
 - (NSString *)DJStringForKey:(id)key
 {
-    return [self stringForKey:key withDefault:nil];
+    return [self DJStringForKey:key withDefault:nil];
 }
 
 
@@ -381,7 +381,26 @@
 
 - (NSString *)DJStringForKey:(id)key withDefault:(NSString *)theDefault
 {
-  return [self stringForKey:key withDefault:theDefault];
+    NSString *value = theDefault;
+    
+    id object = [self objectForKey:key];
+    if ([object isValided])
+    {
+        if ([object isKindOfClass:[NSString class]])
+        {
+            value = (NSString *)object;
+        }
+        else if ([object isKindOfClass:[NSNumber class]])
+        {
+            value = ((NSNumber *)object).stringValue;
+        }
+        else if ([object isKindOfClass:[NSURL class]])
+        {
+            value = ((NSURL *)object).absoluteString;
+        }
+    }
+    
+    return value;
 }
 
 
@@ -593,13 +612,13 @@
 
 @implementation NSMutableDictionary (bbCategory)
 
-- (void)setInt:(NSInteger)value forKey:(id)key
+- (void)setInteger:(NSInteger)value forKey:(id)key
 {
     NSNumber *number = [NSNumber numberWithInteger:value];
     [self setObject:number forKey:key];    
 }
 
-- (void)setUInt:(NSUInteger)value forKey:(id)key
+- (void)setUInteger:(NSUInteger)value forKey:(id)key
 {
     NSNumber *number = [NSNumber numberWithUnsignedInteger:value];
     [self setObject:number forKey:key];
@@ -660,16 +679,6 @@
     CFRelease(dictionary);
     
     [self setValue:rectDict forKey:key];
-}
-
-- (void)setDJApiString:(NSString *)string forKey:(id)key
-{
-    if (![string isNotEmpty])
-    {
-        string = @"";
-    }
-    
-    [self setObject:string forKey:key];
 }
 
 @end

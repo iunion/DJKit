@@ -11,6 +11,46 @@
 
 @implementation NSArray (Category)
 
++ (NSString *)arrayToJSON:(NSArray *)array
+{
+    // NSJSONWritingPrettyPrinted
+    return [NSArray arrayToJSON:array options:0];
+}
+
++ (NSString *)arrayToJSON:(NSArray *)array options:(NSJSONWritingOptions)options
+{
+    return [array toJSONWithOptions:options];
+}
+
+- (NSString *)toJSON
+{
+    // NSJSONWritingPrettyPrinted
+    return [self toJSONWithOptions:0];
+}
+
+- (NSString *)toJSONWithOptions:(NSJSONWritingOptions)options
+{
+    NSString *json = nil;
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:options error:&error];
+    
+    if (!jsonData)
+    {
+        return @"{}";
+    }
+    else if (!error)
+    {
+        json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        return json;
+    }
+    else
+    {
+        NSLog(@"%@", error.localizedDescription);
+    }
+    
+    return nil;
+}
+
 - (id)safeObjectAtIndex:(NSUInteger)index
 {
     if (self.count > 0 && self.count > index)

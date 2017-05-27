@@ -18,15 +18,17 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable UIColor *) colorWithHexString:(nullable NSString *)stringToConvert default:(nullable UIColor *)color;
 + (nullable UIColor *) colorWithHexString:(NSString *)stringToConvert alpha:(CGFloat)alpha default:(nullable UIColor *)color;
 
-+ (UIColor *) colorWithHex:(unsigned int)hex;
-+ (UIColor *) colorWithHex:(unsigned int)hex alpha:(CGFloat)alpha;
++ (UIColor *) colorWithHex:(UInt32)hex;
++ (UIColor *) colorWithHex:(UInt32)hex alpha:(CGFloat)alpha;
 
 + (UIColor *) randomColor;
 + (UIColor *) randomColorWithAlpha:(CGFloat)alpha;
 
 // 从startColor过渡到endColor
-// scale: 0~1.0
-+ (UIColor *)startColorHex:(unsigned int)startColor endColorHex:(unsigned int)endColor scale:(CGFloat)scale;
+// progress: 0~1.0
++ (UIColor *)startColor:(UIColor *)startColor endColor:(UIColor *)endColor progress:(CGFloat)progress;
++ (UIColor *)startColorHex:(UInt32)startColor endColorHex:(UInt32)endColor progress:(CGFloat)progress;
++ (UIColor *)startColorHex:(UInt32)startColor endColorHex:(UInt32)endColor startAlpha:(CGFloat)startAlpha endAlpha:(CGFloat)endAlpha progress:(CGFloat)progress;
 
 @end
 

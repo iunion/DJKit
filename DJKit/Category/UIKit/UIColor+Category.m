@@ -32,38 +32,6 @@
 
 @implementation UIColor (Hex)
 
-+ (UIColor *)startColorHex:(unsigned int)startColor endColorHex:(unsigned int)endColor scale:(CGFloat)scale
-{
-    unsigned int oHex = startColor;
-    unsigned char oR = (oHex & 0xFF0000) >> 16;
-    unsigned char oG = (oHex & 0xFF00) >> 8;
-    unsigned char oB = oHex & 0xFF;
-    //NSLog(@"HMMainVC_NavBgColorValue  %lX%lX%lX============", oR, oG, oB);
-    
-    unsigned int eHex = endColor;
-    unsigned char eR = (eHex & 0xFF0000) >> 16;
-    unsigned char eG = (eHex & 0xFF00) >> 8;
-    unsigned char eB = eHex & 0xFF;
-    //NSLog(@"UI_NAVIGATION_BGCOLOR_VALUE  %lX%lX%lX============", eR, eG, eB);
-    
-    BOOL isAddR = eR > oR;
-    BOOL isAddG = eG > oG;
-    BOOL isAddB = eB > oB;
-    
-    unsigned char delaR = isAddR ? (eR - oR)*scale :  (oR - eR)*scale;
-    unsigned char delaG = isAddG ? (eG - oG)*scale :  (oG - eG)*scale;
-    unsigned char delaB = isAddB ? (eB - oB)*scale :  (oB - eB)*scale;
-    
-    unsigned char R = isAddR ? oR + delaR : oR - delaR;
-    unsigned char G = isAddG ? oG + delaG : oG - delaG;
-    unsigned char B = isAddB ? oB + delaB : oB - delaB;
-    
-    unsigned int s = (unsigned int)((R << 16) + (G << 8) + B);
-    
-    //NSLog(@"BGCOLOR_%0.2f %02hhX%02hhX%02hhX==", scale, R, G, B);
-    return [UIColor colorWithHex:(unsigned int)s];
-}
-
 + (UIColor *) colorWithHexString:(NSString *)stringToConvert
 {
     return [UIColor colorWithHexString:stringToConvert alpha:1.0f];
@@ -169,12 +137,12 @@
 // index既是()小括号位置
 // alpha = [[text substringWithRange:[result rangeAtIndex:4]] doubleValue];
 
-+ (UIColor *) colorWithHex:(unsigned int)hex
++ (UIColor *) colorWithHex:(UInt32)hex
 {
 	return [UIColor colorWithHex:hex alpha:1.0f];
 }
 
-+ (UIColor *) colorWithHex:(unsigned int)hex alpha:(CGFloat)alpha
++ (UIColor *) colorWithHex:(UInt32)hex alpha:(CGFloat)alpha
 {
 	return [UIColor colorWithRed:((float)((hex & 0xFF0000) >> 16)) / 255.0
                            green:((float)((hex & 0xFF00) >> 8)) / 255.0
@@ -193,6 +161,53 @@
 	int g = arc4random() % 255;
 	int b = arc4random() % 255;
 	return [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:alpha];
+}
+
++ (UIColor *)startColor:(UIColor *)startColor endColor:(UIColor *)endColor progress:(CGFloat)progress
+{
+    return [UIColor startColorHex:startColor.rgbHex endColorHex:endColor.rgbHex startAlpha:startColor.alpha endAlpha:endColor.alpha progress:progress];
+}
+
++ (UIColor *)startColorHex:(UInt32)startColor endColorHex:(UInt32)endColor progress:(CGFloat)progress
+{
+    return [UIColor startColorHex:startColor endColorHex:endColor startAlpha:1.0 endAlpha:1.0 progress:progress];
+}
+
++ (UIColor *)startColorHex:(UInt32)startColor endColorHex:(UInt32)endColor startAlpha:(CGFloat)startAlpha endAlpha:(CGFloat)endAlpha progress:(CGFloat)progress
+{
+    UInt32 oHex = startColor;
+    unsigned char oR = (oHex & 0xFF0000) >> 16;
+    unsigned char oG = (oHex & 0xFF00) >> 8;
+    unsigned char oB = oHex & 0xFF;
+    //NSLog(@"HMMainVC_NavBgColorValue  %lX%lX%lX============", oR, oG, oB);
+    
+    UInt32 eHex = endColor;
+    unsigned char eR = (eHex & 0xFF0000) >> 16;
+    unsigned char eG = (eHex & 0xFF00) >> 8;
+    unsigned char eB = eHex & 0xFF;
+    //NSLog(@"UI_NAVIGATION_BGCOLOR_VALUE  %lX%lX%lX============", eR, eG, eB);
+    
+    BOOL isAddR = eR > oR;
+    BOOL isAddG = eG > oG;
+    BOOL isAddB = eB > oB;
+    
+    unsigned char delaR = isAddR ? (eR - oR)*progress :  (oR - eR)*progress;
+    unsigned char delaG = isAddG ? (eG - oG)*progress :  (oG - eG)*progress;
+    unsigned char delaB = isAddB ? (eB - oB)*progress :  (oB - eB)*progress;
+    
+    unsigned char R = isAddR ? oR + delaR : oR - delaR;
+    unsigned char G = isAddG ? oG + delaG : oG - delaG;
+    unsigned char B = isAddB ? oB + delaB : oB - delaB;
+    
+    // color RGB hex
+    UInt32 s = (UInt32)((R << 16) + (G << 8) + B);
+    
+    // color alpha
+    CGFloat dAlpha = endAlpha - startAlpha;
+    CGFloat alpha = startAlpha + (dAlpha * progress);
+    
+    //NSLog(@"BGCOLOR_%0.2f %02hhX%02hhX%02hhX==", scale, R, G, B);
+    return [UIColor colorWithHex:(UInt32)s alpha:alpha];
 }
 
 @end

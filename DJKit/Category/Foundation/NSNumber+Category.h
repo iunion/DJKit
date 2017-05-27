@@ -16,10 +16,15 @@
 // 0 --> 0
 - (nullable NSString *)stringWithNormalDecimalStyle;
 
-// 转换数字保留places位小数
-- (nullable NSString *)stringWithNoStyleDecimalPlaces:(NSUInteger)places;
-- (nullable NSString *)stringWithDecimalStyleDecimalPlaces:(NSUInteger)places;
+// 转换数字保留scale位小数
+- (nullable NSString *)stringWithNoStyleDecimalScale:(short)scale;
+- (nullable NSString *)stringWithDecimalStyleDecimalScale:(short)scale;
+
+- (nullable NSString *)stringWithNoStyleMaximumFractionDigits:(NSUInteger)maximumFractionDigits minimumFractionDigits:(NSUInteger)minimumFractionDigits;
+- (nullable NSString *)stringWithDecimalStyleMaximumFractionDigits:(NSUInteger)maximumFractionDigits minimumFractionDigits:(NSUInteger)minimumFractionDigits;
+
 - (nullable NSString *)stringWithNumberFormatUsePositiveFormat:(nullable NSString *)positiveFormat;
+
 - (nullable NSString *)stringWithNumberFormat:(nullable NSNumberFormatter *)formatter;
 
 @end

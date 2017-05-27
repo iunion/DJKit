@@ -19,59 +19,47 @@
     }
     else
     {
-        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    
-        return [self stringWithNumberFormat:numberFormatter];
+        return [self stringWithNormalDecimalStyle];
     }
 }
 
 - (NSString *)stringWithNormalDecimalStyle
 {
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    numberFormatter.maximumFractionDigits = 2;
+    numberFormatter.minimumFractionDigits = 0;
+    
+        return [self stringWithNumberFormat:numberFormatter];
+}
+
+- (NSString *)stringWithNoStyleDecimalScale:(short)scale
+{
+    return [self stringWithNoStyleMaximumFractionDigits:scale minimumFractionDigits:scale];
+}
+
+- (NSString *)stringWithNoStyleMaximumFractionDigits:(NSUInteger)maximumFractionDigits minimumFractionDigits:(NSUInteger)minimumFractionDigits;
+{
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    numberFormatter.maximumFractionDigits = maximumFractionDigits;
+    numberFormatter.minimumFractionDigits = minimumFractionDigits;
     
     return [self stringWithNumberFormat:numberFormatter];
 }
 
-- (NSString *)stringWithNoStyleDecimalPlaces:(NSUInteger)places
+- (NSString *)stringWithDecimalStyleDecimalScale:(short)scale
 {
-    NSMutableString *positiveFormat = [[NSMutableString alloc] initWithString:@"#0"];
-    if (places > 0)
-    {
-        if (places > 6)
-        {
-            places = 6;
-        }
-        
-        [positiveFormat appendString:@"."];
-        for (NSUInteger i=0; i<places; i++)
-        {
-            [positiveFormat appendString:@"0"];
-        }
-    }
-    
-    return [self stringWithNumberFormatUsePositiveFormat:positiveFormat];
+    return [self stringWithDecimalStyleMaximumFractionDigits:scale minimumFractionDigits:scale];
 }
 
-- (NSString *)stringWithDecimalStyleDecimalPlaces:(NSUInteger)places
+- (NSString *)stringWithDecimalStyleMaximumFractionDigits:(NSUInteger)maximumFractionDigits minimumFractionDigits:(NSUInteger)minimumFractionDigits;
 {
-    NSMutableString *positiveFormat = [[NSMutableString alloc] initWithString:@"#,##0"];
-    if (places > 0)
-    {
-        if (places > 6)
-        {
-            places = 6;
-        }
-        
-        [positiveFormat appendString:@"."];
-        for (NSUInteger i=0; i<places; i++)
-        {
-            [positiveFormat appendString:@"0"];
-        }
-    }
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    numberFormatter.maximumFractionDigits = maximumFractionDigits;
+    numberFormatter.minimumFractionDigits = minimumFractionDigits;
     
-    return [self stringWithNumberFormatUsePositiveFormat:positiveFormat];
+    return [self stringWithNumberFormat:numberFormatter];
 }
 
 - (NSString *)stringWithNumberFormatUsePositiveFormat:(NSString *)positiveFormat

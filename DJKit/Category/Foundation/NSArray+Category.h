@@ -11,6 +11,19 @@
 @interface NSArray (Category)
 
 /**
+ *  Convert the given array to JSON as NSString
+ *
+ *  @param array The array to be reversed
+ *
+ *  @return Return the JSON as NSString or nil if error while parsing
+ */
++ (nullable NSString *)arrayToJSON:(nullable NSArray *)array;
++ (nullable NSString *)arrayToJSON:(nullable NSArray *)array options:(NSJSONWritingOptions)options;
+
+- (nullable NSString *)toJSON;
+- (nullable NSString *)toJSONWithOptions:(NSJSONWritingOptions)options;
+
+/**
  *  Get the object at a given index in safe mode (nil if self is empty or out of range)
  *
  *  @param index The index
