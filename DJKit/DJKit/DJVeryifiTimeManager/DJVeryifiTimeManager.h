@@ -27,6 +27,7 @@ typedef void(^DJVeryifiTimeBlock)(DJVerificationCodeType type, NSUInteger ticket
 + (DJVeryifiTimeManager *)manager;
 
 - (NSUInteger)startTimeWithType:(DJVerificationCodeType)type process:(DJVeryifiTimeBlock)veryifiBlock;
+- (NSUInteger)startTimeWithType:(DJVerificationCodeType)type duration:(CFTimeInterval)duration process:(DJVeryifiTimeBlock)veryifiBlock;
 - (void)stopTimeWithType:(DJVerificationCodeType)type;
 
 - (void)stopAllType;

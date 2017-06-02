@@ -20,6 +20,8 @@
 @property (nonatomic, strong) NSMutableDictionary *blockDic;
 
 @property (nonatomic, strong) NSTimer *timer;
+//@property (nonatomic, strong) CADisplayLink *timer;
+@property (nonatomic, assign) CFTimeInterval durationTime;
 
 @end
 
@@ -60,6 +62,17 @@
 
 - (NSUInteger)startTimeWithType:(DJVerificationCodeType)type process:(DJVeryifiTimeBlock)veryifiBlock
 {
+    return [self startTimeWithType:type duration:DJVerifiTime_Wait process:veryifiBlock];
+}
+
+- (NSUInteger)startTimeWithType:(DJVerificationCodeType)type duration:(CFTimeInterval)duration process:(DJVeryifiTimeBlock)veryifiBlock
+{
+    if (duration <= 0)
+    {
+        return 0;
+    }
+    
+    self.durationTime = duration;
     NSUInteger tichet = [self getTicketWithType:type];
     
     if (tichet > 0)
@@ -77,12 +90,12 @@
         return tichet;
     }
     
-    [self.timerDic setObject:@(DJVerifiTime_Wait) forKey:@(type)];
+    [self.timerDic setObject:@(self.durationTime) forKey:@(type)];
     
     if (veryifiBlock)
     {
         [self.blockDic setObject:veryifiBlock forKey:@(type)];
-        veryifiBlock(type, DJVerifiTime_Wait, NO);
+        veryifiBlock(type, self.durationTime, NO);
     }
     
     if (!self.timer)
