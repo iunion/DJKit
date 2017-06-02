@@ -19,15 +19,17 @@ typedef NS_ENUM(NSInteger, IMAGE_GRAYSCALETYPE)
     IMAGE_GRAYSCALETYPE_INVERSE
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIImage (Category)
 
+// 图片拉伸
 + (UIImage *)strethImageWith:(NSString *)imageName;
 - (UIImage *)stretchableImage;
 
 - (UIImage *)resizedImageModeTile;
 + (UIImage *)resizedImageModeTileWithName:(NSString *)name;
 
-// 图片拉伸
 + (UIImage *)resizedImageWithName:(NSString *)name;
 + (UIImage *)resizedImageWithName:(NSString *)name left:(CGFloat)left top:(CGFloat)top;
 
@@ -35,31 +37,34 @@ typedef NS_ENUM(NSInteger, IMAGE_GRAYSCALETYPE)
 + (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
 
 // 图片先压缩到size大小然后再做圆角大小为r，然后在view上圆角与图片可能被等比拉伸/缩放
-+ (id)createRoundedRectImage:(UIImage *)image size:(CGSize)size radius:(NSInteger)r;
++ (UIImage *)createRoundedRectImage:(UIImage *)image size:(CGSize)size radius:(CGFloat)r;
 // 先在原图做r大的圆角，然后在view上圆角与图片可能被等比拉伸/缩放
-+ (id)createRoundedRectImage:(UIImage *)image radius:(NSInteger)r;
++ (UIImage *)createRoundedRectImage:(UIImage *)image radius:(CGFloat)r;
 
 // 文字转为图片
 + (UIImage *)imageFromText:(NSString *)text;
 + (UIImage *)imageFromText:(NSString *)text font:(UIFont *)font size:(CGSize)size;
++ (UIImage *)imageFromText:(NSString *)text font:(UIFont *)font color:(nullable UIColor *)color size:(CGSize)size;
+
+- (UIImage *)fixOrientation;
+
+// 图像旋转(角度)
+- (UIImage *)imageRotatedByDegrees:(CGFloat)degrees;
+- (UIImage *)imageRotatedByRadians:(CGFloat)radians;
 
 
 // 画水印
 // 图片水印
-- (UIImage *) imageWithWaterMask:(UIImage *)mask inRect:(CGRect)rect;
+- (UIImage *)imageWithWaterMask:(UIImage *)mask inRect:(CGRect)rect;
 // 文字水印
-- (UIImage *) imageWithStringWaterMark:(NSString *)markString inRect:(CGRect)rect color:(UIColor *)color font:(UIFont *)font;
-- (UIImage *) imageWithStringWaterMark:(NSString *)markString atPoint:(CGPoint)point color:(UIColor *)color font:(UIFont *)font;
+- (UIImage *)imageWithStringWaterMark:(NSString *)markString inRect:(CGRect)rect color:(nullable UIColor *)color font:(UIFont *)font;
+- (UIImage *)imageWithStringWaterMark:(NSString *)markString atPoint:(CGPoint)point color:(nullable UIColor *)color font:(UIFont *)font;
 
 // 蒙板
-- (UIImage *) imageWithColor:(UIColor*)color inRect:(CGRect)rect;
+- (UIImage *)imageWithColor:(UIColor *)color inRect:(CGRect)rect;
 
 // 保存图像文件
-- (BOOL) writeImageToFileAtPath:(NSString *)aPath;
-
-
-// 图像旋转(角度)
-- (UIImage *) imageRotatedByDegrees:(CGFloat)degrees;
+- (BOOL)writeImageToFileAtPath:(NSString *)aPath;
 
 
 // 黑白
@@ -109,4 +114,5 @@ typedef enum {
 - (NSData *)setImageMetadata:(NSMutableDictionary *)metaData withCompressionQuality:(CGFloat)compressionQuality;
 @end
 
+NS_ASSUME_NONNULL_END
 

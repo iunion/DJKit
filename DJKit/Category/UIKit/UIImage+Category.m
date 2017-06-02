@@ -20,9 +20,9 @@ typedef NS_ENUM(NSInteger, PIXELS)
 };
 
 
-static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWidth, float ovalHeight)
+static void addRoundedRectToPath(CGContextRef context, CGRect rect, CGFloat ovalWidth, CGFloat ovalHeight)
 {
-    float fw, fh;
+    CGFloat fw, fh;
     
     if (ovalWidth == 0 || ovalHeight == 0)
     {
@@ -56,7 +56,6 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     
     return image;
 }
-
 
 // 拉伸图片
 - (UIImage *)stretchableImage
@@ -122,7 +121,7 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
 }
 
 // 圆角
-+ (id)createRoundedRectImage:(UIImage*)image size:(CGSize)size radius:(NSInteger)r
++ (UIImage *)createRoundedRectImage:(UIImage *)image size:(CGSize)size radius:(CGFloat)r
 {
     // the size of CGContextRef
     int w = size.width;
@@ -148,30 +147,9 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     return img;
 }
 
-+ (id)createRoundedRectImage:(UIImage*)image radius:(NSInteger)r
++ (UIImage *)createRoundedRectImage:(UIImage *)image radius:(CGFloat)r
 {
-    // the size of CGContextRef
-    int w = image.size.width;
-    int h = image.size.height;
-    
-    UIImage *img = image;
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrderDefault);
-    CGRect rect = CGRectMake(0, 0, w, h);
-    
-    CGContextBeginPath(context);
-    addRoundedRectToPath(context, rect, r, r);
-    CGContextClosePath(context);
-    CGContextClip(context);
-    CGContextDrawImage(context, CGRectMake(0, 0, w, h), img.CGImage);
-    CGImageRef imageMasked = CGBitmapContextCreateImage(context);
-    img = [UIImage imageWithCGImage:imageMasked];
-    
-    CGContextRelease(context);
-    CGColorSpaceRelease(colorSpace);
-    CGImageRelease(imageMasked);
-    
-    return img;
+    return [UIImage createRoundedRectImage:image size:image.size radius:r];
 }
 
 + (UIImage *)imageFromText:(NSString *)text
@@ -183,6 +161,11 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
 }
 
 + (UIImage *)imageFromText:(NSString *)text font:(UIFont *)font size:(CGSize)size
+{
+    return [self imageFromText:text font:font color:nil size:size];
+}
+
++ (UIImage *)imageFromText:(NSString *)text font:(UIFont *)font color:(UIColor *)color size:(CGSize)size
 {
     //UIFont* emojiFont = [UIFont fontWithName:@"AppleColorEmoji" size:35.0];
     if (&UIGraphicsBeginImageContextWithOptions != NULL)
@@ -197,14 +180,149 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
 #pragma clang diagnostic pop
         
     }
+    
+    // 文字颜色
+    if (color)
+    {
+        [color set];
+    }
+    
     [text drawAtPoint:CGPointMake(0.0, 0.0) withAttributes:@{NSFontAttributeName:font}];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
+- (UIImage *)fixOrientation
+{
+    // No-op if the orientation is already correct
+    if (self.imageOrientation == UIImageOrientationUp) return self;
+    
+    // We need to calculate the proper transformation to make the image upright.
+    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    
+    switch (self.imageOrientation)
+    {
+        case UIImageOrientationDown:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, self.size.width, self.size.height);
+            transform = CGAffineTransformRotate(transform, M_PI);
+            break;
+            
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+            transform = CGAffineTransformTranslate(transform, self.size.width, 0);
+            transform = CGAffineTransformRotate(transform, M_PI_2);
+            break;
+            
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, 0, self.size.height);
+            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            break;
+        case UIImageOrientationUp:
+        case UIImageOrientationUpMirrored:
+            break;
+    }
+    
+    switch (self.imageOrientation)
+    {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, self.size.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, self.size.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        case UIImageOrientationUp:
+        case UIImageOrientationDown:
+        case UIImageOrientationLeft:
+        case UIImageOrientationRight:
+            break;
+    }
+    
+    // Now we draw the underlying CGImage into a new context, applying the transform
+    // calculated above.
+    CGContextRef ctx = CGBitmapContextCreate(NULL, self.size.width, self.size.height,
+                                             CGImageGetBitsPerComponent(self.CGImage), 0,
+                                             CGImageGetColorSpace(self.CGImage),
+                                             CGImageGetBitmapInfo(self.CGImage));
+    CGContextConcatCTM(ctx, transform);
+    switch (self.imageOrientation)
+    {
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            // Grr...
+            CGContextDrawImage(ctx, CGRectMake(0,0,self.size.height,self.size.width), self.CGImage);
+            break;
+            
+        default:
+            CGContextDrawImage(ctx, CGRectMake(0,0,self.size.width,self.size.height), self.CGImage);
+            break;
+    }
+    
+    // And now we just create a new UIImage from the drawing context
+    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
+    UIImage *img = [UIImage imageWithCGImage:cgimg];
+    CGContextRelease(ctx);
+    CGImageRelease(cgimg);
+    return img;
+}
+
+//
+//CGFloat DegreesToRadians(CGFloat degrees);
+//CGFloat RadiansToDegrees(CGFloat radians);
+//
+//
+//CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
+//CGFloat RadiansToDegrees(CGFloat radians) {return radians * 180/M_PI;};
+
+#define DegreesToRadians_Loc(ds) ((ds) * M_PI / 180)
+#define RadiansToDegrees_Loc(rs) ((rs) * 180 / M_PI)
+
+- (UIImage *)imageRotatedByDegrees:(CGFloat)degrees
+{
+    // calculate the size of the rotated view's containing box for our drawing space
+    UIView *rotatedViewBox = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.size.width, self.size.height)];
+    CGAffineTransform t = CGAffineTransformMakeRotation(DegreesToRadians_Loc(degrees));
+    rotatedViewBox.transform = t;
+    CGSize rotatedSize = rotatedViewBox.frame.size;
+    //    [rotatedViewBox release];
+    
+    // Create the bitmap context
+    UIGraphicsBeginImageContext(rotatedSize);
+    CGContextRef bitmap = UIGraphicsGetCurrentContext();
+    
+    // Move the origin to the middle of the image so we will rotate and scale around the center.
+    CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
+    
+    //   // Rotate the image context
+    CGContextRotateCTM(bitmap, DegreesToRadians_Loc(degrees));
+    
+    // Now, draw the rotated/scaled image into the context
+    CGContextScaleCTM(bitmap, 1.0, -1.0);
+    CGContextDrawImage(bitmap, CGRectMake(-self.size.width / 2, -self.size.height / 2, self.size.width, self.size.height), [self CGImage]);
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
+- (UIImage *)imageRotatedByRadians:(CGFloat)radians
+{
+    return [self imageRotatedByDegrees:RadiansToDegrees_Loc(radians)];
+}
+
 // 画水印
-- (UIImage *) imageWithWaterMask:(UIImage*)mask inRect:(CGRect)rect
+- (UIImage *)imageWithWaterMask:(UIImage *)mask inRect:(CGRect)rect
 {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0)
@@ -218,9 +336,9 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     }
 #endif
     
-    //原图
+    // 原图
     [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
-    //水印图
+    // 水印图
     [mask drawInRect:rect];
     
     UIImage *newPic = UIGraphicsGetImageFromCurrentImageContext();
@@ -229,7 +347,7 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     return newPic;
 }
 
-- (UIImage *) imageWithStringWaterMark:(NSString *)markString inRect:(CGRect)rect color:(UIColor *)color font:(UIFont *)font
+- (UIImage *)imageWithStringWaterMark:(NSString *)markString inRect:(CGRect)rect color:(UIColor *)color font:(UIFont *)font
 {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0)
@@ -243,13 +361,16 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     }
 #endif
     
-    //原图
+    // 原图
     [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
     
-    //文字颜色
-    [color set];
+    // 文字颜色
+    if (color)
+    {
+        [color set];
+    }
     
-    //水印文字
+    // 水印文字
     [markString drawInRect:rect withAttributes:@{NSFontAttributeName:font}];
     
     UIImage *newPic = UIGraphicsGetImageFromCurrentImageContext();
@@ -258,7 +379,7 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     return newPic;
 }
 
-- (UIImage *) imageWithStringWaterMark:(NSString *)markString atPoint:(CGPoint)point color:(UIColor *)color font:(UIFont *)font
+- (UIImage *)imageWithStringWaterMark:(NSString *)markString atPoint:(CGPoint)point color:(UIColor *)color font:(UIFont *)font
 {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0)
@@ -272,13 +393,16 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     }
 #endif
     
-    //原图
+    // 原图
     [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
     
-    //文字颜色
-    [color set];
+    // 文字颜色
+    if (color)
+    {
+        [color set];
+    }
     
-    //水印文字
+    // 水印文字
     [markString drawAtPoint:point withAttributes:@{NSFontAttributeName:font}];
     
     UIImage *newPic = UIGraphicsGetImageFromCurrentImageContext();
@@ -288,12 +412,12 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
 }
 
 // 蒙板
-- (UIImage *) imageWithColor:(UIColor*)color inRect:(CGRect)rect
+- (UIImage *)imageWithColor:(UIColor *)color inRect:(CGRect)rect
 {
     return  [self imageWithWaterMask:[UIImage imageWithColor:color size:rect.size] inRect:rect];
 }
 
-- (BOOL) writeImageToFileAtPath:(NSString*)aPath
+- (BOOL)writeImageToFileAtPath:(NSString* )aPath
 {
     if ((aPath == nil) || ([aPath isEqualToString:@""]))
     {
@@ -332,48 +456,7 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     return NO;
 }
 
-
-//
-//CGFloat DegreesToRadians(CGFloat degrees);
-//CGFloat RadiansToDegrees(CGFloat radians);
-//
-//
-//CGFloat DegreesToRadians(CGFloat degrees) {return degrees * M_PI / 180;};
-//CGFloat RadiansToDegrees(CGFloat radians) {return radians * 180/M_PI;};
-
-#define DegreesToRadians_Loc(ds) (ds * M_PI / 180)
-#define RadiansToDegrees_Loc(rs) (rs * 180 / M_PI)
-
-- (UIImage *)imageRotatedByDegrees:(CGFloat)degrees
-{  
-    // calculate the size of the rotated view's containing box for our drawing space
-    UIView *rotatedViewBox = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.size.width, self.size.height)];
-    CGAffineTransform t = CGAffineTransformMakeRotation(DegreesToRadians_Loc(degrees));
-    rotatedViewBox.transform = t;
-    CGSize rotatedSize = rotatedViewBox.frame.size;
-//    [rotatedViewBox release];
-    
-    // Create the bitmap context
-    UIGraphicsBeginImageContext(rotatedSize);
-    CGContextRef bitmap = UIGraphicsGetCurrentContext();
-    
-    // Move the origin to the middle of the image so we will rotate and scale around the center.
-    CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
-    
-    //   // Rotate the image context
-    CGContextRotateCTM(bitmap, DegreesToRadians_Loc(degrees));
-    
-    // Now, draw the rotated/scaled image into the context
-    CGContextScaleCTM(bitmap, 1.0, -1.0);
-    CGContextDrawImage(bitmap, CGRectMake(-self.size.width / 2, -self.size.height / 2, self.size.width, self.size.height), [self CGImage]);
-    
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return newImage;
-}
-
-- (UIImage*)convertToGrayScale
+- (UIImage *)convertToGrayScale
 {
 	/* const UInt8 luminance = (red * 0.2126) + (green * 0.7152) + (blue * 0.0722); // Good luminance value */
 	/// Create a gray bitmap context
@@ -563,6 +646,49 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     }
 }
 
+//获取图片某一点的颜色
+- (UIColor *)colorAtPixel:(CGPoint)point
+{
+    if (!CGRectContainsPoint(CGRectMake(0.0f, 0.0f, self.size.width, self.size.height), point))
+    {
+        return nil;
+    }
+    
+    NSInteger pointX = trunc(point.x);
+    NSInteger pointY = trunc(point.y);
+    
+    NSUInteger width = self.size.width;
+    NSUInteger height = self.size.height;
+    
+    CGImageRef cgImage = self.CGImage;
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    int bytesPerPixel = 4;
+    int bytesPerRow = bytesPerPixel * 1;
+    NSUInteger bitsPerComponent = 8;
+    unsigned char pixelData[4] = { 0, 0, 0, 0 };
+    CGContextRef context = CGBitmapContextCreate(pixelData,
+                                                 1,
+                                                 1,
+                                                 bitsPerComponent,
+                                                 bytesPerRow,
+                                                 colorSpace,
+                                                 kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    CGContextSetBlendMode(context, kCGBlendModeCopy);
+    
+    CGContextTranslateCTM(context, -pointX, pointY-(CGFloat)height);
+    CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, (CGFloat)width, (CGFloat)height), cgImage);
+    CGContextRelease(context);
+    
+    CGFloat red   = (CGFloat)pixelData[0] / 255.0f;
+    CGFloat green = (CGFloat)pixelData[1] / 255.0f;
+    CGFloat blue  = (CGFloat)pixelData[2] / 255.0f;
+    CGFloat alpha = (CGFloat)pixelData[3] / 255.0f;
+    
+    NSLog(@"R:%f***G:%f***B:%f***A:%f", red, green, blue, alpha);
+    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+
 @end
 
 
@@ -677,11 +803,6 @@ static CGImageRef CreateMask(CGSize size, NSUInteger thickness)
     CGImageRelease(transparentBorderImageRef);
     
     return transparentBorderImage;
-}
-
-- (UIImage *)imageRotatedByRadians:(CGFloat)radians
-{
-    return [self imageRotatedByDegrees:RadiansToDegrees_Loc(radians)];
 }
 
 @end
@@ -826,7 +947,8 @@ static CGImageRef CreateMask(CGSize size, NSUInteger thickness)
 
 - (UIImage *)boxblurImageWithBlur:(CGFloat)blur
 {
-    if (blur < 0.f || blur > 1.f) {
+    if (blur < 0.f || blur > 1.f)
+    {
         blur = 0.5f;
     }
     int boxSize = (int)(blur * 40);
