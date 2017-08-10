@@ -93,4 +93,38 @@
     return [self decimalNumberByRoundingAccordingToBehavior:roundingBehavior];
 }
 
+
+#pragma mark -
+#pragma mark compare
+// NSOrderedAscending, NSOrderedSame, NSOrderedDescending
+- (BOOL)isEqualToDecimalNumber:(NSDecimalNumber *)number
+{
+    BOOL result = ([self compare:number] == NSOrderedSame);
+    return result;
+}
+
+- (BOOL)isGreaterThanDecimalnumber:(NSDecimalNumber *)number
+{
+    BOOL result = ([self compare:number] == NSOrderedDescending);
+    return result;
+}
+
+- (BOOL)isGreaterThanOrEqualToDecimalnumber:(NSDecimalNumber *)number
+{
+    BOOL result = ([self compare:number] != NSOrderedAscending);
+    return result;
+}
+
+- (BOOL)isLessThanDecimalnumber:(NSDecimalNumber *)number
+{
+    BOOL result = ([self compare:number] == NSOrderedAscending);
+    return result;
+}
+
+- (BOOL)isLessThanOrEqualToDecimalnumber:(NSDecimalNumber *)number
+{
+    BOOL result = ([self compare:number] != NSOrderedDescending);
+    return result;
+}
+
 @end

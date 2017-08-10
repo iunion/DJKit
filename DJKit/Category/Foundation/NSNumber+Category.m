@@ -38,6 +38,11 @@
     return [self stringWithNoStyleMaximumFractionDigits:scale minimumFractionDigits:scale];
 }
 
+- (NSString *)stringWithNoStyleDecimalNozeroScale:(short)scale
+{
+    return [self stringWithNoStyleMaximumFractionDigits:scale minimumFractionDigits:0];
+}
+
 - (NSString *)stringWithNoStyleMaximumFractionDigits:(NSUInteger)maximumFractionDigits minimumFractionDigits:(NSUInteger)minimumFractionDigits;
 {
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];

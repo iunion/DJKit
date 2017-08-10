@@ -18,6 +18,7 @@
 
 // 转换数字保留scale位小数
 - (nullable NSString *)stringWithNoStyleDecimalScale:(short)scale;
+- (nullable NSString *)stringWithNoStyleDecimalNozeroScale:(short)scale;
 - (nullable NSString *)stringWithDecimalStyleDecimalScale:(short)scale;
 
 - (nullable NSString *)stringWithNoStyleMaximumFractionDigits:(NSUInteger)maximumFractionDigits minimumFractionDigits:(NSUInteger)minimumFractionDigits;

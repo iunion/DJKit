@@ -222,6 +222,11 @@
     [self setTextUnderlineStyle:style color:nil range:range];
 }
 
+- (void)setTextUnderlineColor:(UIColor *)color
+{
+    [self setTextUnderlineColor:color range:NSMakeRange(0, [self length])];
+}
+
 - (void)setTextUnderlineColor:(UIColor *)color range:(NSRange)range
 {
     if (range.location == NSNotFound || color == nil)

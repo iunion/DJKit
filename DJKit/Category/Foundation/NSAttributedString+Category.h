@@ -39,6 +39,7 @@
 - (void)setTextIsUnderlined:(BOOL)underlined range:(NSRange)range;
 // ! @param style is a combination of CTUnderlineStyle & CTUnderlineStyleModifiers
 - (void)setTextUnderlineStyle:(int32_t)style range:(NSRange)range;
+- (void)setTextUnderlineColor:(nonnull UIColor *)color;
 - (void)setTextUnderlineColor:(nonnull UIColor *)color range:(NSRange)range;
 - (void)setTextUnderlineStyle:(int32_t)style color:(nullable UIColor *)color range:(NSRange)range;
 

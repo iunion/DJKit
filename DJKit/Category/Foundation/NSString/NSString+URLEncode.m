@@ -18,11 +18,11 @@
 
 - (NSString *)URLEncodeUsingEncoding:(NSStringEncoding)encoding
 {
-    return (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
-                                                                                 (__bridge CFStringRef)self,
-                                                                                 NULL,
-                                                                                 (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ",
-                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding)));
+    NSLog(@"原url: %@", self);
+    NSString *encodedString = (NSString *) CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)self, (CFStringRef)@"!$&'()*+,-./:;=?@_~%#[]", NULL, CFStringConvertNSStringEncodingToEncoding(encoding)));
+    NSLog(@"转码url: %@", encodedString);
+    
+    return encodedString;
 }
 
 - (NSString *)URLDecode
@@ -32,10 +32,11 @@
 
 - (NSString *)URLDecodeUsingEncoding:(NSStringEncoding)encoding
 {
-    return ( NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
-                                                                                                  (__bridge CFStringRef)self,
-                                                                                                  CFSTR(""),
-                                                                                                  CFStringConvertNSStringEncodingToEncoding(encoding)));
+    NSLog(@"转码url: %@", self);
+    NSString *decodedString = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (__bridge CFStringRef)self, CFSTR(""), CFStringConvertNSStringEncodingToEncoding(encoding));
+    NSLog(@"还原url: %@", decodedString);
+    
+    return decodedString;
 }
 
 + (NSString *)URLString:(NSString *)URLString appendingQueryString:(NSString *)queryString

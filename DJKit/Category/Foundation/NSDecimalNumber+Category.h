@@ -71,6 +71,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSDecimalNumber *)roundToScale:(short)scale mode:(NSRoundingMode)roundingMode;
 
+
+- (BOOL)isEqualToDecimalNumber:(NSDecimalNumber *)number;
+- (BOOL)isGreaterThanDecimalnumber:(NSDecimalNumber *)number;
+- (BOOL)isGreaterThanOrEqualToDecimalnumber:(NSDecimalNumber *)number;
+- (BOOL)isLessThanDecimalnumber:(NSDecimalNumber *)number;
+- (BOOL)isLessThanOrEqualToDecimalnumber:(NSDecimalNumber *)number;
+
 @end
 
 NS_ASSUME_NONNULL_END

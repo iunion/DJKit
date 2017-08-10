@@ -324,7 +324,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return a new NSData, or nil if an error occurs.
  */
-+ (NSData *)dataWithHexString:(NSString *)hexString;
++ (nullable NSData *)dataWithHexString:(NSString *)hexString;
 
 
 #pragma mark - Inflate and deflate
@@ -403,7 +403,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return A new data create from the file.
  */
-+ (NSData *)dataNamed:(NSString *)name;
++ (nullable NSData *)dataNamed:(NSString *)name;
 
 @end
 

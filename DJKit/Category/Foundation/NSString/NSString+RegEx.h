@@ -196,6 +196,7 @@
 /**
  * 返回第一个匹配的字符串在整体字符串中的位置，location in NSRange，无匹配则返回-1
  */
+- (NSRange)rangOfFirstMatchWithPattern:(NSString *)pattern;
 - (NSInteger)indexOfFirstMatchWithPattern:(NSString *)pattern;
 /**
  * 通过表达式替换字符串，返回替换后的结果

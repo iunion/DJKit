@@ -166,15 +166,21 @@
     return [self isMatch:RX(pattern)];
 }
 
-- (NSInteger)indexOfFirstMatchWithPattern:(NSString *)pattern
+- (NSRange)rangOfFirstMatchWithPattern:(NSString *)pattern
 {
     NSError *error;
     NSRegularExpression *regEx = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:&error];
     if (error)
     {
-        return -1;
+        return NSMakeRange(NSNotFound, 0);
     }
     NSRange range = [regEx rangeOfFirstMatchInString:self options:0 range:NSMakeRange(0, self.length)];
+    return range;
+}
+
+- (NSInteger)indexOfFirstMatchWithPattern:(NSString *)pattern
+{
+    NSRange range = [self rangOfFirstMatchWithPattern:pattern];
     return range.location == NSNotFound ? -1 : (int)range.location;
 }
 

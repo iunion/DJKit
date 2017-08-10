@@ -23,9 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong, readonly) DJClassInfor *superClassInfo; ///< super class's class info
 
-@property (nonatomic, strong, readonly) NSArray *propertys;
-@property (nonatomic, strong, readonly) NSArray *ivars;
-@property (nonatomic, strong, readonly) NSArray *methods;
+@property (nullable, nonatomic, strong, readonly) NSArray *propertys;
+@property (nullable, nonatomic, strong, readonly) NSArray *ivars;
+@property (nullable, nonatomic, strong, readonly) NSArray *methods;
 
 + (nullable instancetype)classInfoWithClass:(Class)cls;
 
