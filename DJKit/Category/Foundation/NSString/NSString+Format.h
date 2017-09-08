@@ -12,9 +12,13 @@
 
 - (nullable NSString *)formatWithPattern:(nullable NSString *)pattern;
 - (nullable NSString *)formatWithPattern:(nullable NSString *)pattern placeholder:(nullable NSString *)placeholder;
+- (nullable NSString *)formatWithPattern:(nullable NSString *)pattern placeholder:(nullable NSString *)placeholder errorContinue:(BOOL)errorContinue;
 
 - (nullable NSString *)formatWithRegex:(nullable NSRegularExpression *)regex;
 - (nullable NSString *)formatWithRegex:(nullable NSRegularExpression *)regex placeholder:(nullable NSString *)placeholder;
+- (nullable NSString *)formatWithRegex:(nullable NSRegularExpression *)regex placeholder:(nullable NSString *)placeholder errorContinue:(BOOL)errorContinue;
+
+- (nullable NSString *)validCharactersWithRegex:(nullable NSRegularExpression *)regex errorContinue:(BOOL)errorContinue;
 
 @end
 

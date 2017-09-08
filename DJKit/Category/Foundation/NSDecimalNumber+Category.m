@@ -11,10 +11,10 @@
 
 @implementation NSDecimalNumber (Category)
 
-+ (NSDecimalNumber *)rounding:(CGFloat)price withScale:(short)scale mode:(NSRoundingMode)roundingMode
++ (NSDecimalNumber *)rounding:(double)value withScale:(short)scale mode:(NSRoundingMode)roundingMode
 {
     NSDecimalNumber *ouncesDecimal;
-    ouncesDecimal = [[NSDecimalNumber alloc] initWithFloat:price];
+    ouncesDecimal = [[NSDecimalNumber alloc] initWithDouble:value];
     return [NSDecimalNumber roundingNumber:ouncesDecimal withScale:scale mode:roundingMode];
 }
 

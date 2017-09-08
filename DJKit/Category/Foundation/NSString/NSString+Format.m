@@ -9,6 +9,7 @@
 
 #import "NSString+Format.h"
 #import "NSString+RegEx.h"
+#import "NSObject+Category.h"
 
 #define kRESULT_INDEX   0
 #define kLENGTH_INDEX   1
@@ -25,7 +26,12 @@
 
 - (NSString *)formatWithPattern:(NSString *)pattern placeholder:(NSString *)placeholder
 {
-    if (!pattern)
+    return [self formatWithPattern:pattern placeholder:kDefaultPlaceholder errorContinue:NO];
+}
+
+- (NSString *)formatWithPattern:(NSString *)pattern placeholder:(NSString *)placeholder errorContinue:(BOOL)errorContinue
+{
+    if (![pattern isNotEmpty])
     {
         return nil;
     }
@@ -35,7 +41,7 @@
                                                                            options:NSRegularExpressionCaseInsensitive
                                                                              error:&error];
     
-    return [self formatWithRegex:regex placeholder:placeholder];
+    return [self formatWithRegex:regex placeholder:placeholder errorContinue:errorContinue];
 }
 
 - (NSString *)formatWithRegex:(NSRegularExpression *)regex
@@ -45,12 +51,23 @@
 
 - (NSString *)formatWithRegex:(NSRegularExpression *)regex placeholder:(NSString *)placeholder
 {
+    return [self formatWithRegex:regex placeholder:placeholder errorContinue:NO];
+}
+
+- (NSString *)formatWithRegex:(NSRegularExpression *)regex placeholder:(NSString *)placeholder errorContinue:(BOOL)errorContinue
+{
     if (!regex)
     {
         return nil;
     }
     
-    NSString *validCharacters = [self validCharactersWithRegex:regex];
+    // Empty placeholder (@"")
+    if (![placeholder isNotEmpty])
+    {
+        placeholder = nil;
+    }
+    
+    NSString *validCharacters = [self validCharactersWithRegex:regex errorContinue:errorContinue];
     
     NSMutableString *pattern = [NSMutableString stringWithString:regex.pattern];
     NSMutableString *formattedString = [NSMutableString new];
@@ -67,7 +84,7 @@
 }
 
 // Returns only the valid characters in _string_ that matches the instance's _regex_ limited by the expected length.
-- (NSString *)validCharactersWithRegex:(NSRegularExpression *)regex
+- (NSString *)validCharactersWithRegex:(NSRegularExpression *)regex errorContinue:(BOOL)errorContinue
 {
     if (!regex)
     {
@@ -92,7 +109,7 @@
         {
             // Add a capturing group to the pattern
             adaptingResult = [self adaptsFirstGroupPattern:firstGroupPattern subtracting:n];
-            if (adaptingResult[kLENGTH_INDEX] == 0)
+            if ([adaptingResult[kLENGTH_INDEX] integerValue] == 0)
             {
                 break;
             }
@@ -107,12 +124,19 @@
             result = [regex firstMatchInString:string options:NSMatchingWithoutAnchoringBounds range:NSMakeRange(0, string.length)];
             if (!result)
             {
-                break;
+                if (errorContinue)
+                {
+                    break; // 继续匹配
+                }
+                else
+                {
+                    return validCharacters;
+                }
             }
             
             NSString *matchedString = [string substringWithRange:result.range];
             
-            string = [string stringByReplacingCharactersInRange:result.range withString:@""];
+            string = [string stringByReplacingCharactersInRange:NSMakeRange(0, result.range.location + result.range.length) withString:@""];
             
             [validCharacters appendString:matchedString];
             
@@ -151,11 +175,17 @@
     // Replaces the the content of braces with {1, numberOfRepetitions}
     if (numberOfRepetitions > 0)
     {
-        group = [group stringByReplacingCharactersInRange:[numRep rangeAtIndex:1] withString:[NSString stringWithFormat:@"1,%lu", numberOfRepetitions - n]];
+        long reps = numberOfRepetitions - n;
+        group = [group stringByReplacingCharactersInRange:[numRep rangeAtIndex:1] withString:[NSString stringWithFormat:@"1,%ld", reps]];
+
+        if (reps < 1)
+        {
+            return @[@"", @0];
+        }
     }
     else
     {
-        numberOfRepetitions = INFINITY;
+        numberOfRepetitions = NSIntegerMax;
     }
     
     return @[group, @(numberOfRepetitions)];

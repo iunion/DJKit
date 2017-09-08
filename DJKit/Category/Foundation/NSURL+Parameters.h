@@ -10,6 +10,8 @@
 
 @interface NSURL (Parameters)
 
+- (NSDictionary *)queryDictionary;
+
 - (NSURL *)URLByAppendingQueryString:(NSString *)queryString;
 - (NSURL *)URLByAppendingQueryParameters:(NSDictionary *)parameters;
 - (NSURL *)URLByAppendingQueryParameters:(NSDictionary *)parameters usingEncoding:(NSStringEncoding)encoding;

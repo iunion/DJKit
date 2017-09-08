@@ -10,6 +10,47 @@
 
 @implementation NSURL (Parameters)
 
+- (NSDictionary *)queryDictionary
+{
+    NSString *keyValues = self.query;
+    if (![keyValues isNotEmpty]) return nil;
+    
+    return [self queryDictionaryWithKeysValues:keyValues];
+}
+
+// 从k=v中获取键值
+- (NSString *)valueFromKeyValue:(NSString *)keyValue atIndex:(NSUInteger)index
+{
+    return [[keyValue componentsSeparatedByString:@"="] objectAtIndex:index];
+}
+
+- (NSDictionary *)queryDictionaryWithKeysValues:(NSString *)keyValues
+{
+    if (!(keyValues.length > 0)) return @{};
+    
+    NSArray *pairArray = [keyValues componentsSeparatedByString:@"&"];  //键值对字符串
+    NSMutableDictionary *queryDic= [NSMutableDictionary dictionaryWithCapacity:pairArray.count];
+    NSString *key = nil;
+    NSString *obj = nil;
+    if (pairArray.count > 1)
+    {
+        for (NSString *pair in pairArray)
+        {
+            key = [self valueFromKeyValue:pair atIndex:0];
+            obj = [self valueFromKeyValue:pair atIndex:1];
+            [queryDic setObject:[obj stringByRemovingPercentEncoding] forKey:key];
+        }
+    }
+    else if (pairArray.count == 1)
+    {
+        key = [self valueFromKeyValue:keyValues atIndex:0];
+        obj = [self valueFromKeyValue:keyValues atIndex:1];
+        [queryDic setObject:[obj stringByRemovingPercentEncoding] forKey:key];
+    }
+    
+    return queryDic;
+}
+
 - (NSURL *)URLByAppendingQueryString:(NSString *)queryString
 {
     if (![queryString length])

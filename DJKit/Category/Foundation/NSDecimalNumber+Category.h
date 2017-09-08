@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSDecimalNumber (Category)
 
-+ (NSDecimalNumber *)rounding:(CGFloat)price withScale:(short)scale mode:(NSRoundingMode)roundingMode;
++ (NSDecimalNumber *)rounding:(double)value withScale:(short)scale mode:(NSRoundingMode)roundingMode;
 + (NSDecimalNumber *)roundingNumber:(NSDecimalNumber *)ouncesDecimal withScale:(short)scale mode:(NSRoundingMode)roundingMode;
 
 + (NSDecimalNumber *)decimalNumberWithFloat:(float)value;

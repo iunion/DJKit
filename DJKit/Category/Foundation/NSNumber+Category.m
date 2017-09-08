@@ -46,6 +46,7 @@
 - (NSString *)stringWithNoStyleMaximumFractionDigits:(NSUInteger)maximumFractionDigits minimumFractionDigits:(NSUInteger)minimumFractionDigits;
 {
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    numberFormatter.minimumIntegerDigits = 1;
     numberFormatter.maximumFractionDigits = maximumFractionDigits;
     numberFormatter.minimumFractionDigits = minimumFractionDigits;
     

@@ -91,23 +91,23 @@ static const unsigned int allCalendarUnitFlags = NSCalendarUnitYear | NSCalendar
     {
         return @"刚刚";
     }
-    else if (past < 60)
+    else if (past < SECONDS_IN_MINUTE)
     {
         return [NSString stringWithFormat:@"%ld秒前", (long)past];
     }
-    else if(past < 3600)
+    else if(past < SECONDS_IN_HOUR)
     {
-        NSInteger min = past/60;
+        NSInteger min = past/SECONDS_IN_HOUR;
         return [NSString stringWithFormat:@"%ld分钟前", (long)min];
     }
-    else if (past < 86400)
+    else if (past < SECONDS_IN_DAY)
     {
-        NSInteger hour = past/3600;
+        NSInteger hour = past/SECONDS_IN_HOUR;
         return [NSString stringWithFormat:@"%ld小时前", (long)hour];
     }
-    else if (past < 86400*5)
+    else if (past < SECONDS_IN_DAY*5)
     {
-        NSInteger day = past/86400;
+        NSInteger day = past/SECONDS_IN_DAY;
         return [NSString stringWithFormat:@"%ld天前", (long)day];
     }
     
@@ -116,6 +116,39 @@ static const unsigned int allCalendarUnitFlags = NSCalendarUnitYear | NSCalendar
     [dateFormat setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"]];
     [dateFormat setDateFormat:@"yyyy-MM-dd"];
     return [dateFormat stringFromDate:date];
+}
+
++ (NSString *)countDownStringDateFromTs:(NSUInteger)count
+{
+    if (count <= 0)
+    {
+        return @"";
+    }
+    else if (count < SECONDS_IN_MINUTE)
+    {
+        return [NSString stringWithFormat:@"%ld秒", (long)count];
+    }
+    else if(count < SECONDS_IN_HOUR)
+    {
+        NSUInteger min = count/SECONDS_IN_MINUTE;
+        NSUInteger second = count%SECONDS_IN_MINUTE;
+        return [NSString stringWithFormat:@"%ld分%ld秒", (long)min, (long)second];
+    }
+    else if (count < SECONDS_IN_DAY)
+    {
+        NSUInteger hour = count/SECONDS_IN_HOUR;
+        NSUInteger min = (count%SECONDS_IN_HOUR)/SECONDS_IN_MINUTE;
+        NSUInteger second = count%SECONDS_IN_MINUTE;
+        return [NSString stringWithFormat:@"%ld小时%ld分%ld秒", (long)hour, (long)min, (long)second];
+    }
+    else
+    {
+        NSInteger day = count/SECONDS_IN_DAY;
+        NSUInteger hour = (count%SECONDS_IN_DAY)/SECONDS_IN_HOUR;
+        NSUInteger min = (count%SECONDS_IN_HOUR)/SECONDS_IN_MINUTE;
+        NSUInteger second = count%SECONDS_IN_MINUTE;
+        return [NSString stringWithFormat:@"%ld天%ld小时%ld分%ld秒", (long)day, (long)hour, (long)min, (long)second];
+    }
 }
 
 + (NSTimeInterval)timeIntervalFromString:(NSString *)dateString
