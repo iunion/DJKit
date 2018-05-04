@@ -1,5 +1,5 @@
 //
-//  wiNSString+MD5HexDigest.m
+//  NSString+Category.m
 //  DJkit
 //
 //  Created by DennisDeng on 12-1-6.

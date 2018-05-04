@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DJObjectManager : NSObject
 
++ (nullable Class)superClassWithoutFoundation:(Class)cls;
++ (BOOL)isClassFromFoundation:(Class)cls;
+
 + (NSArray<DJObjectProperty *> *)propertyListWithClass:(Class)cls;
 + (NSArray<DJObjectProperty *> *)inheritedPropertyListWithClass:(Class)cls;
 + (NSArray<DJObjectProperty *> *)allPropertyListWithClass:(Class)cls;

@@ -33,13 +33,15 @@
     {
         //imageSize = [UIScreen mainScreen].bounds.size;
         imageSize = CGSizeMake(width, height);
-        x = rect.origin.x, y = rect.origin.y;
+        x = rect.origin.x;
+        y = rect.origin.y;
     }
     else
     {
         //imageSize = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
         imageSize = CGSizeMake(height, width);
-        x = rect.origin.y, y = rect.origin.x;
+        x = rect.origin.y;
+        y = rect.origin.x;
     }
     
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, [UIScreen mainScreen].scale);

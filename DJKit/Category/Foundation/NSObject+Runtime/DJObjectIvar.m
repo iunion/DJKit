@@ -28,6 +28,15 @@
     return self;
 }
 
+- (void)setIvar:(Ivar)aivar
+{
+    if (_ivar != aivar)
+    {
+        _ivar = aivar;
+        [self freshIvar];
+    }
+}
+
 - (void)freshIvar
 {
     const char *name = ivar_getName(self.ivar);
@@ -41,15 +50,6 @@
     {
         _typeEncoding = [NSString stringWithUTF8String:typeEncoding];
         _type = [DJObjectManager encodingTypeWith:typeEncoding];
-    }
-}
-
-- (void)setIvar:(Ivar)aivar
-{
-    if (_ivar != aivar)
-    {
-        _ivar = aivar;
-        [self freshIvar];
     }
 }
 

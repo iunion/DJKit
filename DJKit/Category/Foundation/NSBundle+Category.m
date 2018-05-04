@@ -10,12 +10,12 @@
 
 @implementation NSBundle (Category)
 
-+ (NSString *)resourcePath
++ (NSString *)mainResourcePath
 {
     return [NSBundle mainBundle].resourcePath;
 }
 
-+ (NSString *)bundlePath
++ (NSString *)mainBundlePath
 {
     return [NSBundle mainBundle].bundlePath;
 }

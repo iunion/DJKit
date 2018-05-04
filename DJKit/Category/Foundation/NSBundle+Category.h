@@ -10,9 +10,9 @@
 
 @interface NSBundle (Category)
 
-+ (nullable NSString *)resourcePath;
++ (nullable NSString *)mainResourcePath;
 
-+ (nonnull NSString *)bundlePath;
++ (nonnull NSString *)mainBundlePath;
 
 + (nullable NSString *)applicationPath;
 + (nullable NSString *)applicationName;

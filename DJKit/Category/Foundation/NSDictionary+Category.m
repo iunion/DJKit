@@ -168,7 +168,7 @@
 
 - (double)doubleForKey:(id)key withDefault:(double)theDefault
 {
-    return [self doubleForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:0.0f];
+    return [self doubleForKey:key formatNumberStyle:NSNumberFormatterNoStyle withDefault:theDefault];
 }
 
 - (double)doubleForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault
@@ -215,7 +215,7 @@
 
 - (NSDecimalNumber *)numberForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault
 {
-    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:0.0f roundingScale:-1 roundingMode:NSRoundPlain];
+    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingScale:-1 roundingMode:NSRoundPlain];
 }
 
 - (NSDecimalNumber *)numberForKey:(id)key withDefault:(double)theDefault roundingScale:(short)scale roundingMode:(NSRoundingMode)mode
@@ -241,7 +241,7 @@
 
 - (NSDecimalNumber *)MqNumberForKey:(id)key formatNumberStyle:(NSNumberFormatterStyle)numberStyle withDefault:(double)theDefault
 {
-    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:0.0f roundingScale:2 roundingMode:NSRoundPlain];
+    return [self numberForKey:key formatNumberStyle:numberStyle withDefault:theDefault roundingScale:2 roundingMode:NSRoundPlain];
 }
 
 - (NSDecimalNumber *)MqNumberForKey:(id)key withDefaultDecimalNumber:(NSDecimalNumber *)theDefault

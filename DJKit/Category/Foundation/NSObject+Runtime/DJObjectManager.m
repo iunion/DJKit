@@ -25,15 +25,19 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         DJFoundationClasses = [NSSet setWithObjects:
-                              [NSURL class],
-                              [NSDate class],
-                              [NSValue class],
-                              [NSData class],
-                              [NSError class],
-                              [NSArray class],
-                              [NSDictionary class],
-                              [NSString class],
-                              [NSAttributedString class], nil];
+                               [NSBundle class],
+                               [NSCalendar class],
+                               [NSCharacterSet class],
+                               [NSURL class],
+                               [NSDate class],
+                               [NSValue class],
+                               [NSData class],
+                               [NSError class],
+                               [NSSet class],
+                               [NSArray class],
+                               [NSDictionary class],
+                               [NSString class],
+                               [NSAttributedString class], nil];
     });
     
     return DJFoundationClasses;

@@ -26,6 +26,15 @@
     return self;
 }
 
+- (void)setMethod:(Method)amethod
+{
+    if (_method != amethod)
+    {
+        _method = amethod;
+        [self freshMethod];
+    }
+}
+
 - (void)freshMethod
 {
     _sel = method_getName(self.method);
@@ -65,15 +74,6 @@
             }
         }
         _argumentTypeEncodings = argumentTypes;
-    }
-}
-
-- (void)setMethod:(Method)amethod
-{
-    if (_method != amethod)
-    {
-        _method = amethod;
-        [self freshMethod];
     }
 }
 

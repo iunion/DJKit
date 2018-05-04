@@ -66,7 +66,8 @@
     if (self)
     {
         _cls = cls;
-        _superCls = class_getSuperclass(cls);
+        _superCls = [DJObjectManager superClassWithoutFoundation:cls];
+        //_superCls = class_getSuperclass(cls);
         _isMeta = class_isMetaClass(cls);
         if (!_isMeta)
         {
@@ -75,7 +76,10 @@
         _className = NSStringFromClass(cls);
         [self _update];
         
-        _superClassInfo = [self.class classInfoWithClass:_superCls];
+        if (_superCls)
+        {
+            _superClassInfo = [self.class classInfoWithClass:_superCls];
+        }
     }
     
     return self;
@@ -94,11 +98,11 @@
     
     if (_isMeta)
     {
-        _methods = [DJObjectManager methodListWithClass:cls];
+        _methods = [DJObjectManager classMethodListWithClass:cls];
     }
     else
     {
-        _methods = [DJObjectManager classMethodListWithClass:cls];
+        _methods = [DJObjectManager methodListWithClass:cls];
     }
         
     _needUpdate = NO;
